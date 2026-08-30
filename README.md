@@ -17,3 +17,21 @@ When pcloud status is BAD_LOGIN_TOKEN, verify the repository is up-to-date and t
   pcloudcc -u <<userlogin>> -p -s
   ```
 Type password when asked, sychronization should be restored
+
+## Wake-on-LAN  
+
+Wake-on-LAN allows to start the computer from the network. This one will be listening on the ethernet port even when shut down.  
+Enter the BIOS, in Power management, enable wake on lan.  
+You need to know the mac address of ethernet interface of the computer.  
+When logged in on the computer, run
+  ```bash
+  ip link show
+  ```
+Copy the mac address and paste it in the script wake_on_lan/wake_homelab.sh.  
+
+For the Lenovo M710q and Unbuntu Server 26.04.1, one additionnal configuration is required.  
+The script wake_on_lan/rc.local has to be copied in /etc/ directory. Edit the file to set the right interface name (i.e. eth0,ens...).  
+The package ifupdown is required:
+  ```bash
+  apt install ifupdown
+  ```
