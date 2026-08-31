@@ -1,0 +1,11 @@
+[Unit]
+Description=Enable Wake-up on LAN
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/ethtool -s [your-interface] wol g
+
+[Install]
+WantedBy=basic.target
+

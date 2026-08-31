@@ -29,9 +29,16 @@ When logged in on the computer, run
   ```
 Copy the mac address and paste it in the script wake_on_lan/wake_homelab.sh.  
 
-For the Lenovo M710q and Unbuntu Server 26.04.1, one additionnal configuration is required.  
-The script wake_on_lan/rc.local has to be copied in /etc/ directory. Edit the file to set the right interface name (i.e. eth0,ens...).  
-The package ifupdown is required:
+For the Lenovo M710q and Unbuntu Server 26.04.1, one additionnal configuration is required. We will use systemd services.
+Run
   ```bash
-  apt install ifupdown
+  sudo systemctl edit --force --full wol-enable.service
   ```
+
+Copy wake_on_lan/wol-enable.service into /etc/systemd/system/ directory. Edit the file to set the right interface name (i.e. eth0,ens...) And save.
+  Enable the service with
+  ```bash
+  sudo systemctl daemon-reload
+  sudo systemctl enable wol-enable.service
+  ```
+  
