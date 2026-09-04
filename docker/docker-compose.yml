@@ -1,0 +1,52 @@
+services:
+  openhab:
+    image: openhab/openhab:latest-debian
+    # image: openhab/openhab:milestone
+    # image: openhab/openhab:snapshot
+    container_name: openhab
+    restart: always
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /opt/openhab/.java:/openhab/.java
+      - /opt/openhab/conf:/openhab/conf
+      - /opt/openhab/userdata:/openhab/userdata
+      - /opt/openhab/addons:/openhab/addons
+    environment:
+      USER_ID: ${UID}
+      GROUP_ID: ${GID}
+      # Adjust accordingly
+      OPENHAB_HTTP_PORT: 8080
+      OPENHAB_HTTPS_PORT: 8443
+  
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: always
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    user: "${UID}:${GID}"
+    ports:
+      # These ports should not be changed unless absolutely necessary
+      - "1883:1883"
+      - "8883:8883"
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt:latest
+    container_name: zigbee2mqtt
+    restart: always
+    # Make it run as the openhab user too
+    user: "${UID}:${GID}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./zigbee2mqtt:/app/data
+    ports:
+      # Adjust accordingly
+      - "8081:8080"    
+    # Uncomment the devices section below and map the correct device
+    #devices:
+      #- /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0:/dev/ttyUSB0
+    depends_on:
+      - mosquitto

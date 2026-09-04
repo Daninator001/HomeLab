@@ -1,0 +1,15 @@
+[Unit]
+Description=openHAB
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/openhab
+Environment=COMPOSE_HTTP_TIMEOUT=600
+ExecStart=/usr/bin/env /usr/bin/docker-compose -f /opt/openhab/docker-compose.yml up -d
+ExecStop=/usr/bin/env /usr/bin/docker-compose -f /opt/openhab/docker-compose.yml
+StandardOutput=syslog
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target
